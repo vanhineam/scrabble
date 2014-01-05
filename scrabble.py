@@ -1,13 +1,13 @@
 #!/bin/python
 
 import argparse
+import copy
 
 # Get the input from the commandline
 parser = argparse.ArgumentParser(description="Scrabble")
 parser.add_argument('input')
 args = parser.parse_args()
-userIn = args.input.lower()
-print userIn
+userIn = args.input.upper()
 
 # Scrabble letter scores
 scores = {"a": 1, "c": 3, "b": 3, "e": 1, "d": 2, "g": 2,
@@ -24,7 +24,25 @@ for line in f:
 
 valid_words = []
 
-for i in words:
-    for j in i:
+letters = []
+for i in userIn:
+    letters.append(i)
+
+for current_word in words:
+    valid = True
+    copy_letters = copy.deepcopy(letters)
+    for current_letter in current_word:
+        if current_letter in copy_letters:
+            copy_letters.remove(current_letter)
+        else:
+            valid = False
+            break
+    if valid:
+        valid_words.append(current_word.lower())
 
 
+for word in reversed(valid_words):
+    score = 0
+    for letter in word:
+        score += scores[letter]
+    print score, word
